@@ -1,7 +1,11 @@
 import React from 'react';
 import { Text, View, TouchableHighlight, Image, ScrollView } from 'react-native';
+import {BarChart} from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
+const SCREEN_WIDTH = width < height ? width : height;
+import MapView from 'react-native-maps';
 import styles from './styles';
-import ListItem from './listItem';
 import { connect } from 'react-redux';
 
 class HomeScreen extends React.Component {
@@ -21,103 +25,105 @@ class HomeScreen extends React.Component {
     super(props);
 
     this.state = {
-      stepsDone: 7000,
-      stepsGoal: 10000,
-      macroNutrients: {
-        proteinDone: 100,
-        proteinGoal: 160,
-        carbDone: 60,
-        carbGoal: 200,
-        fatDone: 20,
-        fatGoal: 75
-      },
-      desorbimento: {
-        goalDone: 500,
-        goal: 1000
-      },
-      idratazione: {
-        goalDone: 2,
-        goal: 10
-      },
-      alimentazione:{
-        goalDone: 450,
-        goal: 1000
-      },
-      percorsi:{
-        goalDone: 25,
-        goal: 100
+      assInstantaneo: 65.3,
+      assMedio: 67.4,
+      data : {
+        labels: ["1","2","3","4","5","6","7","8","9","10","11","12",
+                  "13","14","15","16","17","18","19","20","21","22","23","24"],
+        datasets: [
+          {
+            data: [20,45,28,80,99,43,78,67,45,56,27,100,45,67,89,55,67,38,89,23,45,65,76,58]
+          }
+        ]
       }
+      
     };
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({
-      userPhoto: this.props.userPhoto
-    });
-  }
-  onPressNutrition = () => {
-    this.props.navigation.navigate('Nutrition', {
-      macroNutrients: this.state.macroNutrients
-    });
   };
 
-  onPressSteps = () => {
-    let stepsDone = this.state.stepsDone;
-    let stepsGoal = this.state.stepsGoal;
-    this.props.navigation.navigate('Steps', { stepsDone, stepsGoal });
-  };
+  getAssorbimento = async () => {
 
-  onPressDetailsText = () => {};
+    let params = new FormData();
+    params.append("user", this.props.userName);
+    params.append("token", "1fm2adl");
+    params.append("timestamp", "");
 
-  getCaloriesDone = () => {
-    var calories = 0;
-    this.props.nutrition.map(data => {
-      data.foods.map(food => {
-        calories += food.calories;
-      });
-    });
-    return calories;
-  };
+    fetch("http://188.166.29.27:5001/instant_absorb", {
+      method: "POST",
+      body: params
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result);
+    })
+    .catch(e => {
+      console.error(e);
+    })
+
+    // try{
+    //   let response= await fetch("http://188.166.29.27:5001/instant_absorb", {
+    //     method: "POST",
+    //     body: {
+    //        user: this.props.userName,
+    //        token: "1fm2adl",
+    //     }
+    //   })
+    //   let json= await response.json; 
+
+    //   infoAssorbimento={
+    //      assIst:json.Assorbimento_Istantaneo,
+    //      assMed:json.Assorbimento_ultime24h,
+    //    }
+    //   this.setState({assInstantaneo:this.infoAssorbimento.assIst});
+    //   this.setState({assMedio:this.infoAssorbimento.assMed});
+    // }catch(error){
+    //       console.error(error);
+    // }
+}
+
   render() {
-    const caloriesDone = this.getCaloriesDone();
     return (
-      <ScrollView style={{backgroundColor: "#ECECEC"}}>
-        <View elevation={5} style={styles.container}>
-          <View style={[styles.rowContainer, {marginVertical: 32}]}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.boldText}>Good morning, {this.props.userName}</Text>
-              <View style={styles.normalTextContainer}>
-                <Text style={styles.normalText}>
-                  Eat the right amount of food and stay hydrated through the day
-                </Text>
-              </View>
-              <TouchableHighlight
-                underlayColor="rgba(73,182,77,1,0.9)"
-                onPress={() => this.onPressDetailsText()}
-              >
-                <Text style={styles.detailText}>More details</Text>
-              </TouchableHighlight>
-            </View>
-            <View style={styles.photoContainer}>
-              <View style={styles.greenDot}></View>
-              <Image style={styles.userPhoto} source={require('../../../assets/icons/avatar.png')}   />
-            </View>
+      <ScrollView style={styles.container}>
+        <View style={[styles.rowContainer, {marginVertical: 32}]}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.normalText}>
+              Eat the right amount of food and stay hydrated through the day
+              {"\n" + this.props.timestamp}
+            </Text>
           </View>
-          <View style={[styles.view, {backgroundColor: 'rgb(137,205,195)'}]}>
-          	<Text style={styles.text}>Desorbimento</Text>
-	          <ListItem iconPath={require('../../../assets/icons/colorWater.png')} titleBackground={"rgb(3,167,124)"} 
-	          title={"Idratazione"} goalDone={this.state.idratazione.goal} goal={this.state.idratazione.goalDone} progressBarColor={"rgb(3,167,124)"} 
-	          onClick={() => this.props.navigation.navigate('Water')}/>
-
-	          <ListItem iconPath={require('../../../assets/icons/dish.png')} titleBackground={"#2e7d32"} 
-	          title={"Alimentazione"} goalDone={this.state.alimentazione.goal} goal={this.state.alimentazione.goalDone} progressBarColor={"#2e7d32"}
-	          onClick={() => this.onPressNutrition()} />
+          <View style={styles.photoContainer}>
+            <View style={styles.greenDot}></View>
+             <Image style={styles.userPhoto} source={require('../../../assets/icons/avatar.png')}/>
           </View>
-          <View style={[styles.view, {backgroundColor: 'rgb(253,81,81)'}]}>
-          <Text style={styles.text}>Assorbimento</Text>
-          <ListItem iconPath={require('../../../assets/icons/manWalk.png')} titleBackground={"rgb(178,0,36)"} 
-          title={"Percorsi"} goalDone={this.state.percorsi.goal} goal={this.state.percorsi.goalDone} progressBarColor={"rgb(178,0,6)"} />
-          </View>
+        </View>
+        <View style={[styles.assContainer, {backgroundColor:'#039be5'}]}>
+          <Text style={styles.text}>Assorbimento istantaneo:</Text>
+          <Text style={[styles.text, {color: '#01579b'}]}>{this.state.assInstantaneo}</Text>
+        </View>
+        <View style={[styles.assContainer, {paddingBottom: 15, backgroundColor:'white'}]}>
+          <Text style={[styles.normalText, {textAlign:'center'}]}>Assorbimento sulle 24h</Text>
+          <Text style={[styles.normalText, {textAlign:'center'}]}>{this.state.assMedio}</Text>
+          <ScrollView horizontal={true} style={{ alignSelf: 'center' }}>
+            <BarChart
+              data={this.state.data}
+              width={SCREEN_WIDTH}
+              height={200}
+              fromZero
+              showValuesOnTopOfBars
+              chartConfig={{
+                backgroundColor: 'white',
+                backgroundGradientFrom: 'white',
+                backgroundGradientTo: 'white',
+                decimalPlaces: 0,
+                color: (opacity = 0) => `rgba(0, 145, 225, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(0, 77, 144, ${opacity})`,
+                barPercentage : 0.1,
+              }}
+            />
+          </ScrollView>
+        </View>
+        <View style={{padding:10}}>
+          <MapView style={{width:SCREEN_WIDTH-20, height:500}}>
+          </MapView>
         </View>
       </ScrollView>
     );
@@ -126,12 +132,8 @@ class HomeScreen extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    waterDone: state.water.waterDone,
-    waterGoal: state.water.waterGoal,
-    nutritionGoal: state.nutrition.nutritionGoal,
-    nutrition: state.nutrition.nutrition,
-    userName: state.registration.userName,
-    userPhoto: state.registration.userPhoto
+   userName: state.registration.userName,
+   timestamp: state.timeInfo.timestamp
   };
 }
 

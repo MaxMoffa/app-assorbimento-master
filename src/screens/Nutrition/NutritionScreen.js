@@ -242,26 +242,3 @@ export default connect(
   mapDispatchToProps
 )(NutritionScreen);
 
-//initial alert screen for delete meal - line 221
-/*
- <Modal isVisible={this.state.deleteModal}>
-          <View style={styles.deleteContainer}>
-            <Text style={styles.deleteTxt}>Are you sure you want to delete this meal?</Text>
-            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <TouchableHighlight
-                underlayColor="rgba(73,182,77,1,0.9)"
-                onPress={() => this.onPressDeleteMeal()}
-              >
-                <Text style={styles.deleteSecTxt}>Yes</Text>
-              </TouchableHighlight>
-              <Text> / </Text>
-              <TouchableHighlight
-                underlayColor="rgba(73,182,77,1,0.9)"
-                onPress={() => this.onPressCancel()}
-              >
-                <Text style={styles.deleteSecTxt}>Cancel</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-        */

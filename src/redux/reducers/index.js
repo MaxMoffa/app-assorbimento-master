@@ -5,6 +5,7 @@ import { communityReducer as community } from './comunnityReducer';
 import { registrationReducer as registration } from './registrationReducer';
 import { notificationReducer as notification } from './notificationReducer';
 import { settingReducer as setting } from './settingReducer';
+import { timeStampReducer as timeInfo } from './timeStampReducer';
 
 export const rootReducer = combineReducers({
   water,
@@ -12,5 +13,6 @@ export const rootReducer = combineReducers({
   community,
   registration,
   notification,
-  setting
+  setting,
+  timeInfo
 });

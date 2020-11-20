@@ -10,9 +10,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/Home/HomeScreen';
 import WaterScreen from '../screens/Water/WaterScreen';
 import NutritionScreen from '../screens/Nutrition/NutritionScreen';
-import StepsScreen from '../screens/Steps/StepsScreen';
-import PremiumScreen from '../screens/Premium/PremiumScreen';
+import ConsigliScreen from '../screens/Consigli/ConsigliScreen';
+import UserScreen from '../screens/User/UserScreen';
 import MapScreen from '../screens/Map/MapScreen';
+import CosmeticScreen from '../screens/Cosmetic/CosmeticScreen'
 
 const theme = {
   ...DefaultTheme,
@@ -28,16 +29,17 @@ const Stack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
 
-const HomeStack = () => {
+const ConsigliStack = () => {
   return (
     <Stack.Navigator 
       screenOptions={{
         headerStyle: {backgroundColor: "#ECECEC"},
       }}
     >
-    <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
+    <Stack.Screen name="Consigli" component={ConsigliScreen} options={{headerShown: false}}/>
     <Stack.Screen name="Water" component={WaterScreen}/>
     <Stack.Screen name="Nutrition" component={NutritionScreen}/>
+    <Stack.Screen name="Cosmetic" component={CosmeticScreen}/>
   </Stack.Navigator>
   );
 };
@@ -53,13 +55,13 @@ const tabs = () => {
         >
           <Tab.Screen
             name="Home"
-            component={HomeStack}
+            component={HomeScreen}
             options={{
               tabBarLabel: 'Home',
-              tabBarColor: "#0d47a1",
+              tabBarColor: "#01579b",
               tabBarIcon: ({ color }) => (
-                <Image source={require('../../assets/icons/menuHome.png')}
-                      style={{width:22,height:22,tintColor:'white'}}/>
+                <Image source={require('../../assets/icons/home.png')}
+                      style={{width:25,height:25,tintColor:'white'}}/>
               ),
             }}
           />
@@ -76,23 +78,23 @@ const tabs = () => {
             }}
           />
           <Tab.Screen
-            name="Assorbimento"
-            component={StepsScreen}
+            name="Consigli"
+            component={ConsigliStack}
             options={{
-              tabBarLabel: 'Assorbimento',
-              tabBarColor: "#004d40",
+              tabBarLabel: 'Consigli',
+              tabBarColor: "rgb(46,100,77)",
               tabBarIcon: ({ color }) => (
-                <Image source={require('../../assets/icons/menuWorld.png')}
-                      style={{width:22,height:22,tintColor:'white'}}/>
+                <Image source={require('../../assets/icons/consigli.png')}
+                      style={{width:25,height:25,tintColor:'white'}}/>
               ),
             }}
           />
           <Tab.Screen
             name="Utente"
-            component={PremiumScreen}
+            component={UserScreen}
             options={{
               tabBarLabel: 'Utente',
-              tabBarColor: "#1a237e",
+              tabBarColor: "goldenrod",
               tabBarIcon: ({ color }) => (
                 <Image source={require('../../assets/icons/user.png')}
                       style={{width:22,height:22,tintColor:'white'}}/>
